@@ -1,9 +1,9 @@
 const API_KEY = "";
-let temperatures = [[],[]];
-let humidity = [[],[]];
-let time = [[],[]];
+
 let currentChoice = "current";
 const choices = ["current", "forecast"];
+
+let weather;
 
 const cityInput = document.querySelector("input");
 const tabularMenuElements = document.getElementsByClassName("item");
@@ -15,7 +15,7 @@ const iconImg = document.querySelector("#icon");
 
 weatherContent.style.visibility = "hidden";
 
-const options = {
+const chartOptions = {
     chart: {
         id: 'weather-chart',
         type: 'area',
@@ -23,13 +23,13 @@ const options = {
     },
     series: [{
             name: 'temperature',
-            data: temperatures[choices.indexOf(currentChoice)]
+            data: []
         },{
             name: 'humidity',
-            data: humidity[choices.indexOf(currentChoice)]
+            data: []
         }],
     xaxis: {
-      categories: time[choices.indexOf(currentChoice)]
+      categories: []
     },
     animations: {
         enabled: true,
@@ -45,7 +45,7 @@ const options = {
     }
 }
 
-const chart = new ApexCharts(document.querySelector(".chart"), options);
+const chart = new ApexCharts(document.querySelector(".chart"), chartOptions);
 chart.render();
 
 for(let i = 0; i < tabularMenuElements.length; i++) {
@@ -67,13 +67,13 @@ const findAndRemoveActive = () => {
 const updateChart = () => {
     ApexCharts.exec('weather-chart', 'updateSeries', [{
         name: 'temperature',
-        data: temperatures[choices.indexOf(currentChoice)]},{
+        data: weather.getTemperatureValues()[choices.indexOf(currentChoice)]},{
         name: 'humidity',
-        data: humidity[choices.indexOf(currentChoice)]
+        data: weather.getHumidityValues()[choices.indexOf(currentChoice)]
     }], true, true);
     ApexCharts.exec('weather-chart', 'updateOptions', {
         xaxis: {
-            categories: time[choices.indexOf(currentChoice)]
+            categories: weather.getTimeValues()[choices.indexOf(currentChoice)]
         }
     }, true, true);
 }
@@ -82,21 +82,13 @@ cityInput.addEventListener("keyup", (event) => {
     if (event.key === "Enter" && cityInput.value.length > 0) {
         updateWeather(cityInput.value.toString())
         .then(data => {
-            city.textContent = data.city.name + ", " + data.city.country;
-            currentTmp.textContent = data.list[0].main.temp;
-            weatherDescription.textContent = data.list[0].weather[0].description;
-            const iconId = data.list[0].weather[0].icon;
+            weather = new Weather(data);
+            city.textContent = weather.getLocation();
+            currentTmp.textContent = weather.getCurrentTemperature();
+            weatherDescription.textContent = weather.getDescription();
+            const iconId = weather.getIconId();
             iconImg.src = `http://openweathermap.org/img/w/${iconId}.png`;
-            for(let i = 0; i < 3; i++) {
-                temperatures[0][i] = data.list[i].main.temp;
-                humidity[0][i] = data.list[i].main.humidity + "%";
-                time[0][i] = data.list[i].dt_txt;
-            }
-            for(let i = 0, j = 0; i < 40 && j < 40; i++, j+=8) {
-                temperatures[1][i] = data.list[j].main.temp;
-                humidity[1][i] = data.list[j].main.humidity + "%";
-                time[1][i] = data.list[j].dt_txt.substring(0,10);
-            }
+            weather.setForecastValues();
             updateChart();
             weatherContent.style.visibility = "visible";
         })
