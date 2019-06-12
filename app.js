@@ -8,6 +8,10 @@ const choices = ["current", "forecast"];
 const cityInput = document.querySelector("input");
 const tabularMenuElements = document.getElementsByClassName("item");
 const weatherContent = document.querySelector(".main-content");
+const city = document.querySelector(".city");
+const currentTmp = document.querySelector(".tmp");
+const weatherDescription = document.querySelector(".description");
+const iconImg = document.querySelector("#icon");
 
 weatherContent.style.visibility = "hidden";
 
@@ -78,6 +82,11 @@ cityInput.addEventListener("keyup", (event) => {
     if (event.key === "Enter" && cityInput.value.length > 0) {
         updateWeather(cityInput.value.toString())
         .then(data => {
+            city.textContent = data.city.name + ", " + data.city.country;
+            currentTmp.textContent = data.list[0].main.temp;
+            weatherDescription.textContent = data.list[0].weather[0].description;
+            const iconId = data.list[0].weather[0].icon;
+            iconImg.src = `http://openweathermap.org/img/w/${iconId}.png`;
             for(let i = 0; i < 3; i++) {
                 temperatures[0][i] = data.list[i].main.temp;
                 humidity[0][i] = data.list[i].main.humidity + "%";

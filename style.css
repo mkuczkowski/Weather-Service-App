@@ -60,6 +60,23 @@ input[type="text"]::placeholder {
     color: rgb(185, 179, 179);
 }
 
+.tmp {
+    color: rgb(233, 233, 98);
+}
+
+.description {
+    text-align: center;
+    color: white;
+}
+
+.description::first-letter {
+    text-transform: uppercase;
+}
+
+#icon {
+    vertical-align: middle;
+}
+
 @keyframes appear {
     from {
         opacity: 0;
