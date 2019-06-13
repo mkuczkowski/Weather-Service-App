@@ -37,18 +37,9 @@ h1 {
     font-weight: bold;
 }
 
-input[type="text"] {
-    color: white;
-    background: transparent;
-    border: none;
-    border-bottom: solid 2px white;
-    font-size: 30px;
+.search {
     text-align: center;
-    position: absolute;
-    width: 350px;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 5%;
 }
 
 input[type="text"]:focus {
@@ -90,11 +81,11 @@ input[type="text"]::placeholder {
 
 @keyframes colorize {
     from {
-        border-bottom: solid 2px white;
-        width: 350px;
+        border: solid 2px white;
+        width: 250px;
     }
     to {
-        border-bottom: solid 2px rgb(35, 200, 112);
-        width: 420px;
+        border: solid 3px rgb(35, 200, 112);
+        width: 310px;
     } 
 }

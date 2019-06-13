@@ -1,6 +1,6 @@
 const API_KEY = "";
 
-const choices = ["current", "forecast", "wind", "pressure"];
+const choices = ["current", "forecast", "wind", "pressure", "clouds"];
 
 let currentChoice = choices[0];
 let weather;
@@ -12,6 +12,7 @@ const city = document.querySelector(".city");
 const currentTmp = document.querySelector(".tmp");
 const weatherDescription = document.querySelector(".description");
 const iconImg = document.querySelector("#icon");
+const searchDiv = document.querySelector('.search');
 
 weatherContent.style.visibility = "hidden";
 
@@ -70,6 +71,7 @@ for(let i = 0; i < tabularMenuElements.length; i++) {
         tabularMenuElements[i].classList.add("active");
         currentChoice = choices[i];
         updateChart();
+        $(tabularMenuElements[i]).transition('pulse');
     })
 }
 
@@ -94,6 +96,7 @@ const updateChart = () => {
 
 cityInput.addEventListener("keyup", (event) => {
     if (event.key === "Enter" && cityInput.value.length > 0) {
+        searchDiv.classList.add('loading');
         updateWeather(cityInput.value.toString())
         .then(data => {
             weather = new Weather(data);
@@ -105,6 +108,8 @@ cityInput.addEventListener("keyup", (event) => {
             weather.setForecastValues();
             updateChart();
             weatherContent.style.visibility = "visible";
+            $('.fa-cloud-sun-rain').transition('jiggle');
+            searchDiv.classList.remove('loading');
         })
     }
 });

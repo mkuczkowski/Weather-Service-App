@@ -10,6 +10,7 @@ class Weather {
         this.timeValues = [];
         this.windValues = [];
         this.pressureValues = [];
+        this.cloudinessValues = [];
     }
 
     getDetails(choice) {
@@ -19,9 +20,11 @@ class Weather {
             case "forecast":
                 return this.getForecastWeatherDetails();
             case "wind":
-                return this.getWindDetails();
+                return this.getOneObjectDetails("Wind speed", this.windValues);
             case "pressure":
-                return this.getPressureDetails();
+                return this.getOneObjectDetails("Pressure", this.pressureValues);
+            case "clouds":
+                return this.getOneObjectDetails("Cloudiness", this.cloudinessValues);
         }
     }
 
@@ -32,12 +35,13 @@ class Weather {
             this.timeValues[i] = this.data.list[i].dt_txt;
             this.windValues[i] = this.data.list[i].wind.speed;
             this.pressureValues[i] = this.data.list[i].main.pressure;
+            this.cloudinessValues[i] = this.data.list[i].clouds.all;
         }
     }
 
     getValueFromEachDay(value) {
         let dailyValues = [];
-        for(let i = 0, j = 0; i < 40 && j < 40; i++, j+=8) {
+        for(let i = 0, j = 0; i < this.data.list.length && j < this.data.list.length; i++, j+=8) {
             dailyValues[i] = value[j];
         }
         return dailyValues;
@@ -52,35 +56,20 @@ class Weather {
             }];
     }
 
-    getWindDetails() {
+    getOneObjectDetails(name, data) {
         return [{
-                name: "Wind speed",
-                data: this.getValueFromEachDay(this.windValues)
-            }]
+            name: name,
+            data: this.getValueFromEachDay(data)
+        }]
     }
 
-    getPressureDetails() {
-        return [{
-                name: "Pressure",
-                data: this.getValueFromEachDay(this.pressureValues)
-            }]
-    }
+    getCurrentTemperature() { return this.currentTemperature; }
 
-    getCurrentTemperature() {
-        return this.currentTemperature;
-    }
+    getDescription() { return this.description; }
 
-    getDescription() {
-        return this.description;
-    }
+    getIconId() { return this.iconId; }
 
-    getIconId() {
-        return this.iconId;
-    }
-
-    getLocation() {
-        return this.location;
-    }
+    getLocation() { return this.location; }
 
     getForecastWeatherDetails() {
         return [{
@@ -91,13 +80,9 @@ class Weather {
             }]
     }
     
-    getTemperatureValues() {
-        return this.temperatureValues;
-    }
+    getTemperatureValues() { return this.temperatureValues; }
 
-    getHumidityValues() {
-        return this.humidityValues;
-    }
+    getHumidityValues() { return this.humidityValues; }
 
     getTimeValues(choice) {
         switch(choice) {
@@ -105,14 +90,12 @@ class Weather {
                 return this.timeValues;
             default:
                 let result = [];
-                for(let i = 0, j = 0; i < 40 && j < 40; i++, j+=8) {
+                for(let i = 0, j = 0; i < this.data.list.length && j < this.data.list.length; i++, j+=8) {
                     result[i] = this.timeValues[j].substring(0,10);
                 }
                 return result;
         }
     }
 
-    getWindValues() {
-        return this.windValues;
-    }
+    getWindValues() { return this.windValues; }
 }

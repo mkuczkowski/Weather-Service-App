@@ -13,7 +13,13 @@
     <div class="header-box">
         <h1><span>Weather</span> <span>Service</span> <span><i class="fas fa-cloud-sun-rain"></i></span></h1>
     </div>
-    <input type="text" placeholder="City name" required>
+    <div class="ui search">
+      <div class="ui icon input">
+        <input class="prompt" type="text" placeholder="City name">
+        <i class="search icon"></i>
+      </div>
+      <div class="results"></div>
+    </div>
     <div class="main-content">
       <h1><img id="icon" src="" alt="Weather icon"> <span class="city"></span> <span class="tmp"></span>°C</h1>
       <p class="description"></p>
@@ -31,6 +37,9 @@
             </a>
             <a class="item">
               Atmospheric pressure (hPa)
+            </a>
+            <a class="item">
+              Cloudiness (%) <i class="fas fa-cloud"></i>
             </a>
           </div>
         </div>
