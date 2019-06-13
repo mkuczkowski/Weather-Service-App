@@ -1,8 +1,8 @@
 const API_KEY = "";
 
-let currentChoice = "current";
-const choices = ["current", "forecast"];
+const choices = ["current", "forecast", "wind", "pressure"];
 
+let currentChoice = choices[0];
 let weather;
 
 const cityInput = document.querySelector("input");
@@ -22,10 +22,10 @@ const chartOptions = {
         width: '100%'
     },
     series: [{
-            name: 'temperature',
+            name: '',
             data: []
         },{
-            name: 'humidity',
+            name: '',
             data: []
         }],
     xaxis: {
@@ -65,15 +65,10 @@ const findAndRemoveActive = () => {
 }
 
 const updateChart = () => {
-    ApexCharts.exec('weather-chart', 'updateSeries', [{
-        name: 'temperature',
-        data: weather.getTemperatureValues()[choices.indexOf(currentChoice)]},{
-        name: 'humidity',
-        data: weather.getHumidityValues()[choices.indexOf(currentChoice)]
-    }], true, true);
+    ApexCharts.exec('weather-chart', 'updateSeries', weather.getDetails(currentChoice), true, true);
     ApexCharts.exec('weather-chart', 'updateOptions', {
         xaxis: {
-            categories: weather.getTimeValues()[choices.indexOf(currentChoice)]
+            categories: weather.getTimeValues(currentChoice)
         }
     }, true, true);
 }
@@ -92,6 +87,7 @@ cityInput.addEventListener("keyup", (event) => {
             updateChart();
             weatherContent.style.visibility = "visible";
         })
+        .catch(error => alert("Incorrect city name!"))
     }
 });
 
