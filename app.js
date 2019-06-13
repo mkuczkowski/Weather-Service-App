@@ -15,11 +15,27 @@ const iconImg = document.querySelector("#icon");
 
 weatherContent.style.visibility = "hidden";
 
+const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+  
 const chartOptions = {
     chart: {
         id: 'weather-chart',
         type: 'area',
-        width: '100%'
+        width: '100%',
+        dropShadow: {
+            enabled: true,
+            top: 0,
+            left: 0,
+            blur: 3,
+            opacity: 0.3
+          }
     },
     series: [{
             name: '',
@@ -69,6 +85,9 @@ const updateChart = () => {
     ApexCharts.exec('weather-chart', 'updateOptions', {
         xaxis: {
             categories: weather.getTimeValues(currentChoice)
+        },
+        fill: {
+            colors: [getRandomColor(), getRandomColor()]
         }
     }, true, true);
 }
@@ -87,7 +106,6 @@ cityInput.addEventListener("keyup", (event) => {
             updateChart();
             weatherContent.style.visibility = "visible";
         })
-        .catch(error => alert("Incorrect city name!"))
     }
 });
 
